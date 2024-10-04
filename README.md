@@ -1,2 +1,2 @@
 # CStar
-A C-like languge.
+A C-like programming language.

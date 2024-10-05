@@ -13,8 +13,9 @@ void transpile(FILE *inputFile, FILE *outputFile) {
             fprintf(outputFile, "%s", funcText);  // Use fprintf to write to the output file
          
         }
-       
-       else if (strstr(line, "call") != NULL) {
+else if (strstr(line, "end") != NULL) {
+    fprintf(outputFile, "ret\n"); // Write "ret" to the output file
+}       else if (strstr(line, "call") != NULL) {
             fprintf(outputFile, "%s", line); // Write the call line to the output file
         }
        else if (strstr(line, "dw") != NULL) {

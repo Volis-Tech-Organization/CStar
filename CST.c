@@ -18,6 +18,7 @@ else if (strstr(line, "end") != NULL) {
 }       else if (strstr(line, "call") != NULL) {
             fprintf(outputFile, "%s", line); // Write the call line to the output file
         }
+
        else if (strstr(line, "dw") != NULL) {
             fprintf(outputFile, "%s", line); // Write the dw line to the output file
         }

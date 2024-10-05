@@ -18,17 +18,19 @@ else if (strstr(line, "end") != NULL) {
 }       else if (strstr(line, "call") != NULL) {
             fprintf(outputFile, "%s", line); // Write the call line to the output file
         }
-
-       else if (strstr(line, "dw") != NULL) {
-            fprintf(outputFile, "%s", line); // Write the dw line to the output file
-        }
         else if (strstr(line, "asm") != NULL) {
             char *funcText = strstr(line, "asm") + strlen("asm ");
             fprintf(outputFile, "%s", funcText); // Write the assembly to the output file
         }     
        else if (strstr(line, "jmp") != NULL) {
             fprintf(outputFile, "%s", line); // Write the jmp line to the output file
-       }    
+       }  
+else if (strstr(line, "je") != NULL) {
+            fprintf(outputFile, "%s", line); // Write the jmp line to the output file
+       }  
+else if (strstr(line, "cmp") != NULL) {
+            fprintf(outputFile, "%s", line); // Write the jmp line to the output file
+       }         
         else if(strstr(line, "//") != NULL)
         {
             printf(line);

@@ -11,26 +11,22 @@ void transpile(FILE *inputFile, FILE *outputFile) {
         if (strstr(line, "func") != NULL) {
             char *funcText = strstr(line, "func") + strlen("func "); // Get text after "func"
             fprintf(outputFile, "%s", funcText);  // Use fprintf to write to the output file
-            while (fgets(line, sizeof(line), inputFile) && strstr(line, "end") == NULL) {
-                fprintf(outputFile, "%s", line); // Print the current line to the output file
-            }
+         
         }
-       else if (strstr(line, "end") != NULL) {
-            fprintf(outputFile, "ret\n"); // Write ret to the output file
-        }
+       
        else if (strstr(line, "call") != NULL) {
             fprintf(outputFile, "%s", line); // Write the call line to the output file
         }
        else if (strstr(line, "dw") != NULL) {
             fprintf(outputFile, "%s", line); // Write the dw line to the output file
         }
+        else if (strstr(line, "asm") != NULL) {
+            char *funcText = strstr(line, "asm") + strlen("asm ");
+            fprintf(outputFile, "%s", funcText); // Write the assembly to the output file
+        }     
        else if (strstr(line, "jmp") != NULL) {
             fprintf(outputFile, "%s", line); // Write the jmp line to the output file
-        }
-       else if (strstr(line, "asm") != NULL) {
-            char *asmtxt = strstr(line, "asm") + strlen("asm");
-            fprintf(outputFile, "%s", asmtxt); // Write the assembly to the output file
-        }         
+       }    
         else if(strstr(line, "//") != NULL)
         {
             printf(line);

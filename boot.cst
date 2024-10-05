@@ -1,9 +1,8 @@
 //This is a comment
 func hello:
-asm "jmp hello"
+asm jmp hello
 end
 
-call hello
 
 asm times 510-($-$$) db 0
      

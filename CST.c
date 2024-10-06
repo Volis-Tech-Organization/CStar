@@ -31,6 +31,38 @@ else if (strstr(line, "je") != NULL) {
 else if (strstr(line, "cmp") != NULL) {
             fprintf(outputFile, "%s", line); // Write the jmp line to the output file
        }         
+       else if (strstr(line, "var") != NULL) {
+    // Get the text after "var "
+    char *val = strstr(line, "var") + strlen("var ");
+    
+    // Split the text based on the colon to separate the variable name from its value
+    char varName[128];
+    char varValue[256]; // To handle longer values like strings
+
+    char *colonPos = strchr(val, ':');
+    if (colonPos != NULL) {
+        // Extract variable name
+        size_t varNameLength = colonPos - val;
+        strncpy(varName, val, varNameLength);
+        varName[varNameLength] = '\0';  // Null-terminate the string
+
+        // Extract variable value after the colon
+        strcpy(varValue, colonPos + 1);
+
+        // Remove leading and trailing whitespace from the value if necessary
+        char *start = varValue;
+        while (*start == ' ' || *start == '\t') start++;  // Remove leading spaces
+
+        char *end = start + strlen(start) - 1;
+        while (end > start && (*end == ' ' || *end == '\t' || *end == '\n')) *end-- = '\0';  // Remove trailing spaces
+
+        // Output in the format: varName db varValue
+        fprintf(outputFile, "%s db %s\n", strcat(varName,":"), start);
+        printf("Writing variable: %s db %s\n", varName, start); // Debug
+    } else {
+        printf("Error: Invalid 'var' syntax in line: %s\n", line); // Debug
+    }
+}
         else if(strstr(line, "//") != NULL)
         {
             printf(line);

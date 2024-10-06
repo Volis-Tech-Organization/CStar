@@ -22,7 +22,7 @@ example:
 jmp hello
 ```
 
-- dw mostly used for boot loaders which means word
+- dw 
 example:
 ```
 dw 0x55aa
@@ -38,4 +38,10 @@ asm mov al, bl
 example:
 ```
 // This is very commentary
+```
+- variables
+variables hold info
+example:
+```
+var hello: 'hello world!', 0
 ```

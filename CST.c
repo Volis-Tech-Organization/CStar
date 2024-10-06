@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+int forcount = 0;
 
 
 void transpile(FILE *inputFile, FILE *outputFile) {
@@ -47,31 +48,6 @@ else if (strstr(line, "end") != NULL) {
 else if (strstr(line, "je") != NULL) {
             fprintf(outputFile, "%s", line); // Write the jmp line to the output file
        }  
-       else if (strstr(line, "edit") != NULL) {
-    // Get the text after "edit "
-    char *editText = strstr(line, "edit") + strlen("edit ");
-
-    // Split the text to get address and value
-    char address[128];
-    char value[128];
-    
-    if (sscanf(editText, "%s %s", address, value) == 2) {
-        // Generate assembly code to edit the memory address
-        // For instance, "mov [address], value" in assembly
-
-        // Check if the address is a literal or a variable
-        if (address[0] == '0' && address[1] == 'x') {
-            // Address is a literal (e.g., 0x1234)
-            fprintf(outputFile, "mov dword [%s], %s\n", address, value);
-        } else {
-            // Address is a variable, generate a label
-            fprintf(outputFile, "mov dword [%s], %s\n", address, value);
-        }
-        printf("Editing address %s with value %s\n", address, value); // Debug
-    } else {
-        printf("Error: 'edit' syntax in line: %s\n", line); // Debug
-    }
-}
 
 else if (strstr(line, "cmp") != NULL) {
             fprintf(outputFile, "%s", line); // Write the jmp line to the output file
@@ -108,6 +84,41 @@ else if (strstr(line, "cmp") != NULL) {
         printf("Error: Invalid 'var' syntax in line: %s\n", line); // Debug
     }
 }
+else if (strstr(line, "char") != NULL) {
+    // Get the text after "var "
+    char *val = strstr(line, "char") + strlen("char ");
+    
+    // Split the text based on the colon to separate the variable name from its value
+    char varName[128];
+    char varValue[256]; // To handle longer values like strings
+
+    char *colonPos = strchr(val, ':');
+    if (colonPos != NULL) {
+        // Extract variable name
+        size_t varNameLength = colonPos - val;
+        strncpy(varName, val, varNameLength);
+        varName[varNameLength] = '\0';  // Null-terminate the string
+        char charval = strcat(varValue,", 0");
+        // Extract variable value after the colon
+        strcpy(varValue, colonPos + 1);
+
+        // Remove leading and trailing whitespace from the value if necessary
+        char *start = charval;
+        while (*start == ' ' || *start == '\t') start++;  // Remove leading spaces
+
+        char *end = start + strlen(start) - 1;
+        while (end > start && (*end == ' ' || *end == '\t' || *end == '\n')) *end-- = '\0';  // Remove trailing spaces
+
+        // Output in the format: varName db varValue
+        fprintf(outputFile, "%s db %s\n", strcat(varName,":"), start);
+        printf("Writing variable: %s db %s\n", varName, start); // Debug
+    } else {
+        printf("Error: Invalid 'var' syntax in line: %s\n", line); // Debug
+    }
+}
+        else if (strstr(line, "for") != NULL) {
+            
+        }
         else if(strstr(line, "//") != NULL)
         {
             printf(line);
@@ -120,6 +131,7 @@ else if (strstr(line, "cmp") != NULL) {
         {
             int i = 0;
         }
+        
         else {
             printf("%s", line); 
             printf("Error! \n");\

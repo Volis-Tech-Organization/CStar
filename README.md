@@ -43,5 +43,6 @@ example:
 variables hold info
 example:
 ```
-var hello: 'hello world!', 0
+var hello: 34
+char world: 'char!'
 ```

@@ -1,5 +1,5 @@
 # CStar
-A C-like programming language.
+A programming language based off of C, and Asm.
 
 #Docs
 

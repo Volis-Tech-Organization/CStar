@@ -2,15 +2,34 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 void transpile(FILE *inputFile, FILE *outputFile) {
     char line[256];
-
     // Loop through each line in the file
     while (fgets(line, sizeof(line), inputFile)) {
+       if (strstr(line, "include") != NULL) {
+            // Get the filename from the include line
+            char *file = strstr(line, "include") + strlen("include "); // Get text after "include "
+            file[strcspn(file, "\n")] = 0; // Remove newline character
+            
+            // Open the included file
+            FILE *includedFile = fopen(file, "r");
+            if (includedFile == NULL) { 
+                printf("Error: Could not open file: %s\n");
+            }
+
+            // Recursively call transpile to process the included file
+            transpile(includedFile, outputFile);
+
+            // Close the included file
+            fclose(includedFile);
+            continue; // Skip the rest of the loop for the current line
+        }
         // Check if the line contains the 'func' statement
-        if (strstr(line, "func") != NULL) {
+     else   if (strstr(line, "func") != NULL) {
             char *funcText = strstr(line, "func") + strlen("func "); // Get text after "func"
             fprintf(outputFile, "%s", funcText);  // Use fprintf to write to the output file
+            printf("Initializing Function");
          
         }
 else if (strstr(line, "end") != NULL) {
@@ -28,6 +47,32 @@ else if (strstr(line, "end") != NULL) {
 else if (strstr(line, "je") != NULL) {
             fprintf(outputFile, "%s", line); // Write the jmp line to the output file
        }  
+       else if (strstr(line, "edit") != NULL) {
+    // Get the text after "edit "
+    char *editText = strstr(line, "edit") + strlen("edit ");
+
+    // Split the text to get address and value
+    char address[128];
+    char value[128];
+    
+    if (sscanf(editText, "%s %s", address, value) == 2) {
+        // Generate assembly code to edit the memory address
+        // For instance, "mov [address], value" in assembly
+
+        // Check if the address is a literal or a variable
+        if (address[0] == '0' && address[1] == 'x') {
+            // Address is a literal (e.g., 0x1234)
+            fprintf(outputFile, "mov dword [%s], %s\n", address, value);
+        } else {
+            // Address is a variable, generate a label
+            fprintf(outputFile, "mov dword [%s], %s\n", address, value);
+        }
+        printf("Editing address %s with value %s\n", address, value); // Debug
+    } else {
+        printf("Error: 'edit' syntax in line: %s\n", line); // Debug
+    }
+}
+
 else if (strstr(line, "cmp") != NULL) {
             fprintf(outputFile, "%s", line); // Write the jmp line to the output file
        }         
